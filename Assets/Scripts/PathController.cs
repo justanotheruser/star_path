@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PathDrawer : MonoBehaviour
+public class PathController : MonoBehaviour
 {
     public GameObject linePrefab;
     public float newPointThreshold = .1f;
@@ -13,7 +13,12 @@ public class PathDrawer : MonoBehaviour
     private GameObject currentLine;
     private List<Vector2> fingerPositions;
 
-    private void Awake()
+    public List<Vector2> GetPath()
+    {
+        return fingerPositions;
+    }
+
+    void Awake()
     {
         player = GameObject.FindGameObjectWithTag("Player");
     }
