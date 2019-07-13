@@ -28,6 +28,7 @@ public class PathDrawer : MonoBehaviour
         if(Input.GetMouseButtonDown(0))
         {
             Debug.Log("Pressed left mouse button");
+            DestroyAllPathes();
             StartLine();
         }
         if (Input.GetMouseButton(0))
@@ -37,6 +38,15 @@ public class PathDrawer : MonoBehaviour
             {
                 UpdateLine(curFingerPos);
             }
+        }
+    }
+
+    void DestroyAllPathes()
+    {
+        var pathes = GameObject.FindGameObjectsWithTag("PlayerPath");
+        for (int i = 0; i < pathes.Length; i++)
+        {
+            Destroy(pathes[i]);
         }
     }
 
