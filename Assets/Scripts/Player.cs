@@ -41,7 +41,7 @@ public class Player : MonoBehaviour
             return;
         }
 
-        _path = pathController.GetPath();
+        _path = pathController.GetPlayersPath().points;
         if (_path == null || _path.Count == 0)
         {
             Debug.Log("No path to follow");

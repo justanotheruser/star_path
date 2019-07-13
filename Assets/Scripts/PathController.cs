@@ -2,20 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// Is responsible for drawing and storing path, keeping it always single and always starting from player
 public class PathController : MonoBehaviour
 {
     public GameObject linePrefab;
     public float newPointThreshold = .1f;
 
-    // Line should always start from a player
     private GameObject player;
     private LineRenderer lineRenderer;
     private GameObject currentLine;
-    private List<Vector2> fingerPositions;
+    private PlayersPath _path;
 
-    public List<Vector2> GetPath()
+    public PlayersPath GetPlayersPath()
     {
-        return fingerPositions;
+        return _path;
     }
 
     void Awake()
@@ -25,7 +25,7 @@ public class PathController : MonoBehaviour
 
     void Start()
     {
-        fingerPositions = new List<Vector2>();
+        _path = new PlayersPath();
     }
 
     void Update()
@@ -39,7 +39,7 @@ public class PathController : MonoBehaviour
         if (Input.GetMouseButton(0))
         {
             Vector2 curFingerPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            if (Vector2.Distance(curFingerPos, fingerPositions[fingerPositions.Count - 1]) > newPointThreshold)
+            if (Vector2.Distance(curFingerPos, _path.points[_path.points.Count - 1]) > newPointThreshold)
             {
                 UpdateLine(curFingerPos);
             }
@@ -59,13 +59,13 @@ public class PathController : MonoBehaviour
     {
         currentLine = Instantiate(linePrefab, Vector3.zero, Quaternion.identity);
         lineRenderer = currentLine.GetComponent<LineRenderer>();
-        fingerPositions.Clear();
+        _path.Clear();
 
         Vector2 currentPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        fingerPositions.Add(GetFirstPoint(currentPosition));
-        fingerPositions.Add(currentPosition);
-        lineRenderer.SetPosition(0, fingerPositions[0]);
-        lineRenderer.SetPosition(1, fingerPositions[1]);
+        _path.points.Add(GetFirstPoint(currentPosition));
+        _path.points.Add(currentPosition);
+        lineRenderer.SetPosition(0, _path.points[0]);
+        lineRenderer.SetPosition(1, _path.points[1]);
     }
 
     Vector2 GetFirstPoint(Vector2 defaultPosition)
@@ -78,7 +78,7 @@ public class PathController : MonoBehaviour
 
     void UpdateLine(Vector2 newFingerPos)
     {
-        fingerPositions.Add(newFingerPos);
+        _path.points.Add(newFingerPos);
         lineRenderer.positionCount++;
         lineRenderer.SetPosition(lineRenderer.positionCount-1, newFingerPos);
     }
