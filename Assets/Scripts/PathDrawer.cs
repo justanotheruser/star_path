@@ -7,17 +7,22 @@ public class PathDrawer : MonoBehaviour
     public GameObject linePrefab;
     public float newPointThreshold = .1f;
 
+    // Line should always start from a player
+    private GameObject player;
     private LineRenderer lineRenderer;
     private GameObject currentLine;
     private List<Vector2> fingerPositions;
 
-    // Start is called before the first frame update
+    private void Awake()
+    {
+        player = GameObject.FindGameObjectWithTag("Player");
+    }
+
     void Start()
     {
         fingerPositions = new List<Vector2>();
     }
 
-    // Update is called once per frame
     void Update()
     {
         if(Input.GetMouseButtonDown(0))
@@ -41,11 +46,19 @@ public class PathDrawer : MonoBehaviour
         lineRenderer = currentLine.GetComponent<LineRenderer>();
         fingerPositions.Clear();
 
-        Vector2 firstPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        fingerPositions.Add(firstPoint);
-        fingerPositions.Add(firstPoint);
+        Vector2 currentPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        fingerPositions.Add(GetFirstPoint(currentPosition));
+        fingerPositions.Add(currentPosition);
         lineRenderer.SetPosition(0, fingerPositions[0]);
         lineRenderer.SetPosition(1, fingerPositions[1]);
+    }
+
+    Vector2 GetFirstPoint(Vector2 defaultPosition)
+    {
+        if (player == null)
+            return defaultPosition;
+
+        return player.transform.position;
     }
 
     void UpdateLine(Vector2 newFingerPos)
