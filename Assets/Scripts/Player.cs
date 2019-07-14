@@ -83,4 +83,14 @@ public class Player : MonoBehaviour
             StartCoroutine(SmoothMovement(nextPointIdx));
         }
     }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        Debug.Log(other.name);
+        Debug.Log(other.tag);
+        if (other.tag == "Obstacle")
+        {
+            Application.LoadLevel(Application.loadedLevel);
+        }
+    }
 }
