@@ -4,19 +4,28 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    public PathController pathController;
+    public GameObject pathControllerPrefab;
 
     private Rigidbody2D _rb2D;
+    private PathController _pathController;
     private bool _isLaunched = false;
-    private List<Vector2> _path;
-    
+    private PlayerPath _path;
 
     void Awake()
     {
         _rb2D = GetComponent<Rigidbody2D>();
         if (_rb2D == null)
         {
-            Debug.LogError("Rigit body could not be found");
+            Debug.LogError("Rigid body could not be found");
+        }
+        if (pathControllerPrefab == null)
+        {
+            Debug.Log("Path controller is not set");
+        }
+        _pathController = pathControllerPrefab.GetComponent<PathController>();
+        if (_pathController == null)
+        {
+            Debug.Log("Path controller couldn't be found");
         }
     }
 
@@ -28,21 +37,20 @@ public class Player : MonoBehaviour
             {
                 Launch();
             }
-            
         }
     }
 
     void Launch()
     {
-        Debug.Log("Space pressed");
-        if (pathController == null)
+        Debug.Log("Launch player");
+        if (_pathController == null)
         {
             Debug.LogError("Path controller could not be found");
             return;
         }
 
-        _path = pathController.GetPlayersPath().points;
-        if (_path == null || _path.Count == 0)
+        _path = _pathController.GetPlayersPath();
+        if (_path.points == null || _path.points.Count == 0)
         {
             Debug.Log("No path to follow");
             return;
@@ -50,12 +58,16 @@ public class Player : MonoBehaviour
         
         Debug.Log("Start following path");
         _isLaunched = true;
-        StartCoroutine(SmoothMovement(0, 1f));
+        StartCoroutine(SmoothMovement(2));
     }
 
-    protected IEnumerator SmoothMovement(int pointIdx, float inverseMoveTime)
+    protected IEnumerator SmoothMovement(int pointIdx)
     {
-        Vector3 end = _path[pointIdx];
+        Vector3 end = _path.points[pointIdx];
+        float stillnessTime = _path.stillnessTimes[pointIdx-2];
+        float inverseMoveTime = 1 / _path.moveTimes[pointIdx-2];
+        yield return new WaitForSeconds(stillnessTime);
+
         float sqrRemainingDistance = (transform.position - end).sqrMagnitude;
         while (sqrRemainingDistance > float.Epsilon)
         {
@@ -66,9 +78,9 @@ public class Player : MonoBehaviour
         }
 
         int nextPointIdx = pointIdx + 1;
-        if (nextPointIdx < _path.Count)
+        if (nextPointIdx < _path.points.Count)
         {
-            StartCoroutine(SmoothMovement(nextPointIdx, inverseMoveTime));
+            StartCoroutine(SmoothMovement(nextPointIdx));
         }
     }
 }

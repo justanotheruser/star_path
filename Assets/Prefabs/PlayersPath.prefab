@@ -10,8 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4565608377039951643}
   - component: {fileID: 4565608377039951642}
+  - component: {fileID: 7826119612025976137}
   m_Layer: 0
-  m_Name: Path
+  m_Name: PlayersPath
   m_TagString: PlayerPath
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -127,3 +128,15 @@ LineRenderer:
     generateLightingData: 0
   m_UseWorldSpace: 1
   m_Loop: 0
+--- !u!114 &7826119612025976137
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4565608377039951641}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dedaf521282e21b4283c20c0e4b85e25, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
