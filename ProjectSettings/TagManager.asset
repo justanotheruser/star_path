@@ -6,7 +6,6 @@ TagManager:
   tags:
   - PlayerPath
   - PathStartRegion
-  - Obstacle
   layers:
   - Default
   - TransparentFX
